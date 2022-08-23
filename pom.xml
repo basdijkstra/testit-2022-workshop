@@ -15,8 +15,8 @@
         <restassured.version>5.1.1</restassured.version>
         <wiremock.version>2.33.2</wiremock.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <selenium.version>4.3.0</selenium.version>
-        <webdrivermanager.version>5.2.0</webdrivermanager.version>
+        <selenium.version>4.4.0</selenium.version>
+        <webdrivermanager.version>5.2.3</webdrivermanager.version>
         <maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version>
     </properties>
     <dependencies>
