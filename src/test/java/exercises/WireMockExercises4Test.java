@@ -1,9 +1,8 @@
-package answers;
+package exercises;
 
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import models.LoanDetails;
 import models.LoanRequest;
@@ -15,10 +14,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static io.restassured.RestAssured.enableLoggingOfRequestAndResponseIfValidationFails;
 import static io.restassured.RestAssured.given;
 
-public class WireMockAnswers4Test {
+public class WireMockExercises4Test {
 
     private RequestSpecification requestSpec;
 
@@ -52,11 +50,6 @@ public class WireMockAnswers4Test {
          * already active, so you don't need to do that yourself.
          ************************************************/
 
-        wiremock.stubFor(get(urlEqualTo("/echo-port"))
-            .willReturn(aResponse()
-                .withStatus(200)
-                .withBody("Listening on port {{request.port}}")
-            ));
     }
 
     public void setupStubExercise402() {
@@ -70,11 +63,6 @@ public class WireMockAnswers4Test {
          * loanDetails.amount extracted from the request body
          ************************************************/
 
-        wiremock.stubFor(post(urlEqualTo("/echo-loan-amount"))
-            .willReturn(aResponse()
-                .withStatus(200)
-                .withBody("Received loan application request for ${{jsonPath request.body '$.loanDetails.amount'}}")
-            ));
     }
 
     @Test
