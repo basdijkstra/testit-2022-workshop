@@ -6,6 +6,8 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
 import io.restassured.specification.RequestSpecification;
+import models.LoanDetails;
+import models.LoanRequest;
 import org.apache.http.client.ClientProtocolException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -97,6 +99,27 @@ public class WireMockAnswers2Test {
         stubFor(post(urlEqualTo("/requestLoan"))
                 .withHeader("backgroundCheck",
                         equalTo("OK").or(absent())
+                )
+                .willReturn(aResponse()
+                        .withStatus(200))
+        );
+    }
+
+    public void setupStubExercise205() {
+
+        /************************************************
+         * Create a stub that will respond to a POST request
+         * to /requestLoan with status code 200,
+         * but only if the loan amount specified in the
+         * request body is equal to 1000.
+         *
+         * The loan amount is specified in the 'amount'
+         * field, which is a child element of 'loanDetails'
+         ************************************************/
+
+        stubFor(post(urlEqualTo("/requestLoan"))
+                .withRequestBody(
+                        matchingJsonPath("$.loanDetails[?(@.amount == '1000')]")
                 )
                 .willReturn(aResponse()
                         .withStatus(200))
@@ -196,6 +219,38 @@ public class WireMockAnswers2Test {
             spec(requestSpec).
         and().
             header("backgroundCheck", "FAILED").
+        when().
+            post("/requestLoan").
+        then().
+            assertThat().
+            statusCode(404);
+    }
+
+    @Test
+    public void testExercise205() {
+
+        setupStubExercise205();
+
+        LoanDetails loanDetails = new LoanDetails(1000, 100, "pending");
+        LoanRequest loanRequest = new LoanRequest(12212, loanDetails);
+
+        given().
+            spec(requestSpec).
+        and().
+            body(loanRequest).
+        when().
+            post("/requestLoan").
+        then().
+            assertThat().
+            statusCode(200);
+
+        LoanDetails moreLoanDetails = new LoanDetails(1500, 100, "pending");
+        LoanRequest anotherLoanRequest = new LoanRequest(12212, moreLoanDetails);
+
+        given().
+            spec(requestSpec).
+        and().
+            body(anotherLoanRequest).
         when().
             post("/requestLoan").
         then().
